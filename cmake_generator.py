@@ -3,25 +3,59 @@
 import constants
 import os
 
-def getFileEntry(args, variable, cwd, filename):
+def getRelativeFilename(args, cwd, filename):
     relFilename = filename
     if not args.target_per_dir and not args.recurse:
         relFilename = os.path.join(cwd, filename)
-    return args.file_macro.format(variable, relFilename)
+    return relFilename
+
+def getFileEntry(args, variable, cwd, filename):
+    return args.file_macro.format(variable, getRelativeFilename(args, cwd, filename))
+
+def getFileWithHeaderEntry(args, variable, cwd, sourceFilename, headerFilename):
+    source = getRelativeFilename(args, cwd, sourceFilename)
+    header = getRelativeFilename(args, cwd, headerFilename)
+    return args.file_with_header_macro.format(variable, source, header)
 
 def writeFileEntryForCategory(args, directoryContents, root, cwd, category, variable, outputFile):
     if category in directoryContents[root][cwd]:
         for s in directoryContents[root][cwd][category]:
             outputFile.write(getFileEntry(args, variable, cwd, s) + "\n")
 
+def findAndRemoveMatchingHeader(directoryContents, root, cwd, sourceFilename):
+    workingSet = directoryContents[root][cwd]
+    if not constants.kHeaderKey in workingSet:
+        return None
+
+    baseName = os.path.splitext(sourceFilename)[0] + "."
+    foundHeader = None
+    for h in workingSet[constants.kHeaderKey]:
+        if h.startswith(baseName):
+            foundHeader = h
+            break
+
+    if foundHeader != None:
+        workingSet[constants.kHeaderKey].remove(foundHeader)
+
+    return foundHeader
+
+def writeFileEntryForSource(args, directoryContents, root, cwd, variable, outputFile):
+    if args.file_with_header_macro == None:
+        writeFileEntryForCategory(args, directoryContents, root, cwd, constants.kSourceKey, variable, outputFile)
+        return
+
+    category = constants.kSourceKey
+    if category in directoryContents[root][cwd]:
+        for s in directoryContents[root][cwd][category]:
+            header = findAndRemoveMatchingHeader(directoryContents, root, cwd, s)
+            if header == None:
+                outputFile.write(getFileEntry(args, variable, cwd, s) + "\n")
+            else:
+                outputFile.write(getFileWithHeaderEntry(args, variable, cwd, s, header) + "\n")
+
 def writeFileGroup(args, directoryContents, root, cwd, variable, outputFile):
-
-    writeFileEntryForCategory(args, directoryContents, root, cwd, constants.kSourceKey, variable, outputFile)
+    writeFileEntryForSource(args, directoryContents, root, cwd, variable, outputFile)
     writeFileEntryForCategory(args, directoryContents, root, cwd, constants.kHeaderKey, variable, outputFile)
-    if constants.kSourceKey in directoryContents[root][cwd]:
-        for s in directoryContents[root][cwd][constants.kSourceKey]:
-            outputFile.write(getFileEntry(args, variable, cwd, s) + "\n")
-
     sourceGroupName = cwd.replace("/", "\\\\")
     outputFile.write("source_group(" + sourceGroupName + " FILES ${" + variable + "})\n")
 
