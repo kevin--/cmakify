@@ -17,6 +17,9 @@ kTargetType_Executable = "executable"
 global kTargetType_Library
 kTargetType_Library = "library"
 
+global kDefaultHeaderExtensions
+kDefaultHeaderExtensions = ['h','hpp','in']
+
 global kFileEntryMacro
 kFileEntryMacro = "list(APPEND {0} {1})"
 

@@ -14,7 +14,7 @@ def getArgs():
     parser.add_argument('path', help="the working path to generate CMakeLists.txt for")
     parser.add_argument('--target-per-dir', action='store_true', help="when specified, each directory will be treated as a target, and a CMakeLists.txt will be placed in each directory.")
     parser.add_argument('--target-type', choices=[constants.kTargetType_Executable, constants.kTargetType_Library], help="when set, overrides the target type selection.")
-    parser.add_argument('--header', nargs='*', default=['h','hpp','in'], help="specify the file extension(s) for header files.")
+    parser.add_argument('--header', nargs='*', default=constants.kDefaultHeaderExtensions, help="specify the file extension(s) for header files.")
     parser.add_argument('--source', nargs='*', help="when set, specifies the source file extension(s). By default, everything that is not a header is considered")
     parser.add_argument('--project', help="the name of the project for CMake. If not set, the path's directory name will be used. targets will be generated in the format of \"<project>-<dir>\"")
     parser.add_argument('-xd', '--exclude-dir', nargs='*', default=constants.kExcludeDirectoryList, help="ignore directories matching the specified pattern(s).")
