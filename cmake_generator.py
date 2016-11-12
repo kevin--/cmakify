@@ -5,8 +5,8 @@ import os
 
 def getRelativeFilename(args, cwd, filename):
     relFilename = filename
-    if not args.target_per_dir and not args.recurse:
-        relFilename = os.path.join(cwd, filename)
+    if not args.target_per_dir:
+        relFilename = os.path.normpath(os.path.join(cwd, filename))
     return relFilename
 
 def getFileEntry(args, variable, cwd, filename):
@@ -149,16 +149,19 @@ def shouldAddDirectoryToCMake(args, directoryContents, root, cwd):
 
 def writeAddSubdirectory(args, directoryContents, root, cwd, outputFile):
 
-    if not constants.kDirectoryKey in directoryContents[root][cwd]:
-        return
+    workingSet = directoryContents[root][cwd]
+    if constants.kDirectoryKey in workingSet:
+        for subdir in workingSet[constants.kDirectoryKey]:
+            cwdKey = os.path.normpath(os.path.join(cwd, subdir))
+            if not cwdKey in directoryContents[root]:
+                continue
 
-    for subdir in directoryContents[root][cwd][constants.kDirectoryKey]:
-        cwdKey = os.path.normpath(os.path.join(cwd, subdir))
-        if not cwdKey in directoryContents[root]:
-            continue
+            if shouldAddDirectoryToCMake(args, directoryContents, root, cwd):
+                outputFile.write('add_subdirectory(' + getRelativeFilename(args, cwd, os.path.basename(subdir)) + ')\n')
 
-        if shouldAddDirectoryToCMake(args, directoryContents, root, cwd):
-            outputFile.write('add_subdirectory(' + os.path.basename(subdir) + ')\n')
+    if constants.kCMakeListsKey in workingSet:
+        for subdir in workingSet[constants.kCMakeListsKey]:
+            outputFile.write('add_subdirectory('+ getRelativeFilename(args, cwd, '.') + ')\n')
 
 def writeCMakeListsContent(args, directoryContents, root, cwd, outputFile):
 

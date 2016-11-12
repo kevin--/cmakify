@@ -24,4 +24,4 @@ global kExcludeDirectoryList
 kExcludeDirectoryList = ['*.framework', 'lib', 'libs', 'bin', 'doc', '*.xcodeproj', '*.xcassets']
 
 global kExcludeFileList
-kExcludeFileList = ['*.sln', '*.vcproj', '*.vcxproj', 'Makefile*', '*.lproj', '*.a', '*.dll', '*.lib', '*.exe', '*.dylib']
+kExcludeFileList = ['*.sln', '*.vcproj', '*.vcxproj*', 'Makefile*', '*.lproj', '*.a', '*.dll', '*.lib', '*.exe', '*.dylib']
