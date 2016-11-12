@@ -141,7 +141,7 @@ def shouldAddDirectoryToCMake(args, directoryContents, root, cwd):
         return False
     dirContents = directoryContents[root][cwd]
     ## if it contains a CMakeLists already, or if it has source/header we will generate for
-    shouldAdd = constants.kCMakeListsKey in dirContents
+    shouldAdd = constants.kCMakeListsKey in dirContents or constants.kDirectoryKey in dirContents
     if args.target_per_dir and not shouldAdd:
         shouldAdd = constants.kSourceKey in dirContents or constants.kHeaderKey in dirContents
 
@@ -209,10 +209,14 @@ def writeRecursiveCMakeLists(args, directoryContents, root, cwd):
     if constants.kDirectoryKey in workingSet:
         for directChild in workingSet[constants.kDirectoryKey]:
             childCwd = os.path.normpath(os.path.join(cwd, directChild))
-            if shouldAddDirectoryToCMake(args, directoryContents, root, childCwd) and not dirHasCMakeListsFile(directoryContents, root, cwd):
+            if shouldAddDirectoryToCMake(args, directoryContents, root, childCwd) and not dirHasCMakeListsFile(directoryContents, root, childCwd):
                 writeRecursiveCMakeLists(args, directoryContents, root, childCwd)
 
 def writeAll(args, directoryContents, root):
+
+    if not root in directoryContents:
+        print("no content found! generation skipped")
+        return
 
     if not args.target_per_dir:
         writeFlatCMakeLists(args, directoryContents, root)
