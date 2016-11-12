@@ -13,6 +13,7 @@ Of course, **cmakify** is not smart, so it is up to you to define target relatio
 The first argument is the root of your source tree. By default, sources in all sub-folders are gathered, and a flat top-level `CMakeLists.txt` is generated that includes all source in a single executable target.
 
 There are a few rules that guide this.
+
 1. Headers are determined by the header extension list. The default is `h`, `hpp`, and `in`
 2. Sources are everything else. An extension list can be specified if you want.
 3. You can use the `--exclude-dir` and `--exclude-file` to exclude directories and files from consideration, respectively. (See below)
