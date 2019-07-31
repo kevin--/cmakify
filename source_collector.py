@@ -37,9 +37,23 @@ def addToDict(inOutDirectoryContents, categoryKey, root, cwd, filename):
     verifyDictPath(inOutDirectoryContents, categoryKey, root, cwd)
     inOutDirectoryContents[root][cwd][categoryKey].append(filename)
 
+def appendListItems(theList, anotherList):
+    for i in anotherList:
+        theList.append(i)
+    return theList
+
+def flattenList(theList):
+    flat = []
+    for i in theList:
+        if isinstance(i, list):
+            flat = appendListItems(flat, flattenList(i))
+        else:
+            flat.append(i)
+    return flat
+
 def filenameMatchesMaskList(filename, masklist):
     import fnmatch
-    for pattern in masklist:
+    for pattern in flattenList(masklist):
         if fnmatch.fnmatch(filename, pattern):
             return True
     return False

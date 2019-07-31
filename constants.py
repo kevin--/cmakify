@@ -24,7 +24,7 @@ global kFileEntryMacro
 kFileEntryMacro = "list(APPEND {0} {1})"
 
 global kExcludeDirectoryList
-kExcludeDirectoryList = ['*.framework', 'lib', 'libs', 'bin', 'doc', '*.xcodeproj', '*.xcassets']
+kExcludeDirectoryList = ['*.framework', 'lib', 'libs', 'bin', 'doc', '*.xcodeproj', '*.xcassets', 'gradle']
 
 global kExcludeFileList
-kExcludeFileList = ['*.sln', '*.vcproj', '*.vcxproj*', 'Makefile*', '*.lproj', '*.a', '*.dll', '*.lib', '*.exe', '*.dylib']
+kExcludeFileList = ['*.sln', '*.vcproj', '*.vcxproj*', 'Makefile*', '*.lproj', '*.a', '*.dll', '*.lib', '*.exe', '*.dylib', '*.sh', '*.md', '*.jucer', '*.properties']

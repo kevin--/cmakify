@@ -20,11 +20,9 @@ There are a few rules that guide this.
 4. If any `CMakeLists.txt` are encountered in the tree, references are added to them via `add_subdirectory`
 
 ## Excluded stuff ##
-The arguments `--exclude-dir` and `--exclude-file` allow you to set a list of `fnmatch` expressions that will be used to ignore things.
+The arguments `--exclude-dir` and `--exclude-file` allow you to append a list of `fnmatch` expressions that will be used to ignore things.
 
 These are useful if you want to ignore certain directories of your project. There are some defaults baked in, which are listed below.
-
-Be aware that `--exclude-dir` and `--exclude-file` override these lists, so you may want to re-include these.
 
 *Alternatively, you could just edit `constants.py`*
 
@@ -51,8 +49,6 @@ Be aware that `--exclude-dir` and `--exclude-file` override these lists, so you 
  - `*.dylib`
 
 ### Future Exclusion Work ###
-It would be smart to have `-axd` and `-axf` or something to append the default exclusion lists
-
 It would be smart to read `.gitignore` if present
 
 # CMake Dialect and Generation Behavior #
